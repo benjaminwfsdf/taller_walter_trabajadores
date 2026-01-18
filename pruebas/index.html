@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1d3053" />
+  <meta name="description" content="Panel Principal de Mecánica Walter Uriol" />
+  
+  <!-- Manifest para PWA -->
+  <link rel="manifest" href="manifest.json" />
+  
+  <title>Panel Principal | Walter Uriol</title>
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+
+      --ink:#ffffff;            /* TEXTO BLANCO */
+
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body{
+      margin:0;
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+      color:var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width: 100%;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:22px;
+      padding:12px;
+    }
+    @media(max-width:768px){
+      .grid{ 
+        grid-template-columns:1fr; 
+        gap: 16px;
+        padding: 8px;
+      }
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:.25s;
+      width: 100%;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .icon{
+      flex:0 0 48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:white;
+      color:black;
+      font-size:26px;
+      border:3px solid var(--brand);
+    }
+
+    .title{
+      margin:0;
+      font-size:clamp(1.1rem, 4vw, 1.4rem);
+      font-weight:900;
+      color:white;
+    }
+
+    .desc{
+      margin:4px 0 0;
+      color:white;
+      opacity:.9;
+      font-size:clamp(0.9rem, 3vw, 1rem);
+    }
+
+    /* BOTÓN ABRIR */
+    .actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:clamp(0.9rem, 3vw, 1rem);
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      white-space: nowrap;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+      padding: 0 10px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 14px;
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .actions {
+        margin-left: 0;
+        margin-top: 12px;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .icon {
+        align-self: center;
+      }
+    }
+    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  min-height: 100dvh; /* 👈 corrige bug de Safari */
+  overflow-x: hidden;
+  background-color: #000; /* evita blancos */
+}
+
+/* El fondo real se genera aquí */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: inherit;    /* usa tu fondo ya definido */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
+
+  </style>
+  
+</head>
+
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+
+      <div class="header"><h1>Panel Principal</h1></div>
+
+      <div class="grid">
+
+        <article class="card">
+          <div class="icon">🚗</div>
+          <div>
+            <h2 class="title">Gestión de Vehículos</h2>
+            <p class="desc">Añadir, actualizar y ver autos registrados.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="gestion_autos_trabajador.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🛢️</div>
+          <div>
+            <h2 class="title">Gestión de Aceites</h2>
+            <p class="desc">Inventario y ventas de lubricantes.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="gestion_aceite_trabajadores.html">Abrir</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🤳</div>
+          <div>
+            <h2 class="title">Tarjeta Virtual</h2>
+            <p class="desc">Compartir contacto y QR.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="tarjeta-virtual.html">Abrir</a>
+          </div>
+        </article>
+
+        <!-- ========================
+             ORDEN DE LLEGADA
+        ======================== -->
+        <article class="card">
+          <div class="icon">📋</div>
+          <div>
+            <h2 class="title">Recepción de Clientes</h2>
+            <p class="desc">Registrar patentes en orden de llegada.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="orden_llegada.html">Abrir</a>
+          </div>
+        </article>
+
+        <!-- ========================
+             PANEL DE TURNOS
+        ======================== -->
+        <article class="card">
+          <div class="icon">📺</div>
+          <div>
+            <h2 class="title">Panel de Turnos</h2>
+            <p class="desc">Pantalla grande con reloj, clima y turnos.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="panel_llegada.html">Abrir</a>
+          </div>
+        </article>
+
+        <!-- ========================
+             GESTIÓN DE INFORMES
+             (NUEVA SECCIÓN)
+        ======================== -->
+        <article class="card">
+          <div class="icon">🗒️</div>
+          <div>
+            <h2 class="title">Gestión de Informes</h2>
+            <p class="desc">Crear y buscar informes de diagnóstico.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="gestion_informes.html">Abrir</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
+  
+  <!-- Script de Vercel (mantenido del código original) -->
+  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+</body>
+</html><script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

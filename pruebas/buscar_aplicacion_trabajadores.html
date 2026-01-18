@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔎 Buscar por Auto · Aceites | Walter Uriol</title>
+  <meta name="theme-color" content="#000000">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <style>
+    :root{
+      --brand:#d40000;
+      --brand-dark:#9b0000;
+      --blue:#1d3053;
+      --blue-dark:#1d3053;
+      --ink:#ffffff;
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      background-image:url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      background-attachment:scroll;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width:100%;
+    }
+
+    .frame{
+      background:rgba(135,206,250,0.35);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+    }
+
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom:22px;
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(1.5rem,5vw,2.2rem);
+    }
+
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:22px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+
+    .title{
+      margin:0 0 16px 0;
+      font-size:clamp(1.2rem,4vw,1.6rem);
+      font-weight:900;
+      color:white;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:12px 24px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      font-size:clamp(1rem,3vw,1.1rem);
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor:pointer;
+      display:block;
+      width:100%;
+      text-align:center;
+      margin-bottom:10px;
+      text-decoration:none;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:white;
+      border-color:white;
+    }
+
+    /* ================================
+       ✔ INPUTS ESCRIBEN EN BLANCO
+       ================================ */
+    input, select{
+      width:100%;
+      padding:14px;
+      border-radius:10px;
+      border:2px solid rgba(255,255,255,0.2);
+      background:rgba(0,0,0,0.3);
+      color:white !important;
+      margin-bottom:15px;
+      font-size:clamp(1rem,3vw,1.1rem);
+      box-sizing:border-box;
+    }
+
+    input::placeholder,
+    select::placeholder{
+      color:#ddd !important;
+    }
+
+    input:focus,
+    select:focus{
+      outline:none;
+      border-color:var(--brand);
+    }
+
+    .result{
+      background:rgba(0,0,0,0.3);
+      border:2px solid var(--brand);
+      border-radius:14px;
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,.4);
+    }
+
+    .result h3{
+      margin:0 0 12px;
+      color:white;
+      font-size:clamp(1.1rem,3vw,1.3rem);
+    }
+
+    .result small{
+      opacity:0.7;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 12px;
+      background:rgba(255,255,255,0.1);
+      border-radius:8px;
+      margin-right:8px;
+      margin-bottom:8px;
+    }
+
+    /* ✅ NUEVO: estilos para que quede igual al segundo */
+    .precio-tag{
+      display:inline-block;
+      padding:8px 14px;
+      background:var(--brand);
+      color:white;
+      border-radius:10px;
+      font-weight:900;
+      font-size:clamp(1.05rem,3vw,1.2rem);
+      margin-top:8px;
+      box-shadow:0 6px 16px rgba(0,0,0,.35);
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin:12px 0;
+    }
+
+    .info-item{
+      background:rgba(255,255,255,0.08);
+      padding:10px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.18);
+    }
+
+    ul.autos-list{
+      padding-left:20px;
+      margin:6px 0;
+    }
+
+    ul.autos-list li{
+      margin-bottom:6px;
+    }
+
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+      padding:0 10px;
+    }
+
+    /* === iPhone background fix === */
+    html,body{height:100%;margin:0;padding:0;}
+    body{position:relative;min-height:100dvh;background-color:#000;}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+    }
+
+    /* Tipografía global */
+    body{
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif !important;
+    }
+
+    h1,h2,h3,.title{
+      font-weight:900 !important;
+      color:white !important;
+      text-align:center !important;
+    }
+
+    label, p, small, span, div{
+      font-weight:600 !important;
+      color:white !important;
+    }
+
+    strong{font-weight:800 !important;}
+
+    .btn,
+    .btn *{
+      font-family:inherit !important;
+      font-weight:900 !important;
+      letter-spacing:.3px;
+    }
+
+    select,option{
+      font-weight:700 !important;
+    }
+
+    @media (max-width:520px){
+      .info-grid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header">
+        <h1>🔎 Buscar Aceites por Auto</h1>
+      </div>
+
+      <a href="aceite.html" class="btn btn-secondary">⬅ Volver al Panel</a>
+
+      <!-- FILTROS -->
+      <div class="card">
+        <h2 class="title">Filtros</h2>
+
+        <input id="qMarca" placeholder="Marca / modelo / descripción del auto..."
+               oninput="this.value=this.value.toUpperCase()">
+
+        <select id="qCategoria"></select>
+
+        <button class="btn" onclick="filtrar()">Buscar</button>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="card">
+        <h2 class="title">Resultados</h2>
+        <div id="contenedor"></div>
+        <p id="msg" style="opacity:.8;margin-top:8px;"></p>
+      </div>
+
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+<script>
+const BASE_URL="https://script.google.com/macros/s/AKfycbylNvMd3YLMCAmO9vxmB3dzJ9J2LxayYu7-Tlucwbl-aNRJC8OJe3srJRfPjcdnCWg/exec";
+
+const api=async(action,payload={})=>{
+  const r=await fetch(BASE_URL,{
+    method:"POST",
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({action,payload})
+  });
+  return r.json();
+};
+
+let productos=[];
+const $=id=>document.getElementById(id);
+
+async function cargar(){
+  const r=await api("listInventory");
+  if(!r.ok) return alert("Error al cargar inventario.");
+
+  productos=(r.data||[]).filter(p=>p.activo);
+
+  const cats=Array.from(new Set(productos.map(p=>p.categoria).filter(Boolean)));
+
+  $("qCategoria").innerHTML =
+    `<option value="">Todas las categorías</option>` +
+    cats.map(c=>`<option value="${c}">${c}</option>`).join("");
+
+  render(productos);
+}
+
+function render(list){
+  const cont=$("contenedor");
+  cont.innerHTML="";
+
+  if(!list.length){
+    $("msg").textContent="No se encontraron productos.";
+    return;
+  }
+
+  $("msg").textContent=`Mostrando ${list.length} producto(s).`;
+
+  list.forEach(p=>{
+
+    // Autos compatibles (igual que el segundo)
+    let autos=(p.aplicacion||"")
+      .split(/[,;\n]/g)
+      .map(x=>x.trim())
+      .filter(x=>x.length);
+
+    let autosHTML=autos.length
+      ? `<ul class="autos-list">` + autos.map(a=>`<li>${a}</li>`).join("") + `</ul>`
+      : `<i style="opacity:.6">Sin información</i>`;
+
+    // ✅ PRECIO (igual que el segundo): usa precio_unit
+    let precioHTML = "";
+    if (p.precio_unit !== undefined && p.precio_unit !== null && String(p.precio_unit).trim() !== "") {
+      const precioNum = parseFloat(String(p.precio_unit).replace(/[^\d.,-]/g,"").replace(/\./g,"").replace(",","."));
+      if (!isNaN(precioNum)) {
+        precioHTML = `<div class="precio-tag">$${precioNum.toLocaleString('es-CL')}</div>`;
+      }
+    }
+
+    cont.innerHTML += `
+      <div class="result">
+        <h3>${p.nombre || "-"}</h3>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <small>Categoría:</small>
+            <div><span class="tag">${p.categoria || "-"}</span></div>
+          </div>
+
+          <div class="info-item">
+            <small>Stock:</small>
+            <div style="font-weight:900;color:#4CAF50;">${p.stock || 0} unidades</div>
+          </div>
+        </div>
+
+        <div style="margin:12px 0;">
+          <small>Precio unitario:</small><br>
+          ${precioHTML || '<span style="opacity:0.6">No especificado</span>'}
+        </div>
+
+        <small>Autos compatibles:</small>
+        ${autosHTML}
+      </div>
+    `;
+  });
+}
+
+function filtrar(){
+  const q=$("qMarca").value.toUpperCase();
+  const categoria=$("qCategoria").value;
+
+  const filtrados=productos.filter(p=>{
+    const okCategoria=!categoria||p.categoria===categoria;
+
+    const texto = `${p.aplicacion||""} ${p.nombre||""} ${p.categoria||""}`.toUpperCase();
+    const okMarca=!q||texto.includes(q);
+
+    return okCategoria && okMarca;
+  });
+
+  render(filtrados);
+}
+
+cargar();
+</script>
+
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

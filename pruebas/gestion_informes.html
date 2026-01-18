@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_self">
+
+  <link rel="manifest" href="/manifest.json">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Taller">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="img/scanner.png">
+  <title>Gestor de Informes | Walter Uriol</title>
+
+  <style>
+    :root{
+      --brand:#d40000;          /* ROJO PRINCIPAL */
+      --brand-dark:#9b0000;
+      --blue:#1d3053;           /* AZUL */
+      --blue-dark:#1d3053;
+      --ink:#ffffff;            /* TEXTO BLANCO */
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body{
+  margin:0;
+  background-image: url("img/portada_celular.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; /* evita el bug */
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /* CONTENEDOR */
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width: 100%;
+    }
+
+    /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
+    .frame{
+      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
+    /* GRID */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:22px;
+      padding:12px;
+    }
+    @media(max-width:768px){
+      .grid{ 
+        grid-template-columns:1fr; 
+        gap: 16px;
+        padding: 8px;
+      }
+    }
+
+    /* CARDS */
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      box-shadow:var(--shadow);
+      transition:.25s;
+      width: 100%;
+    }
+
+    .card:hover{
+      transform:translateY(-3px);
+    }
+
+    .icon{
+      flex:0 0 48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:white;
+      color:black;
+      font-size:26px;
+      border:3px solid var(--brand);
+    }
+
+    .title{
+      margin:0;
+      font-size:clamp(1.1rem, 4vw, 1.4rem);
+      font-weight:900;
+      color:white;
+    }
+
+    .desc{
+      margin:4px 0 0;
+      color:white;
+      opacity:.9;
+      font-size:clamp(0.9rem, 3vw, 1rem);
+    }
+
+    /* BOTÓN ABRIR */
+    .actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:10px 20px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      transition:.25s;
+      text-decoration:none;
+      font-size:clamp(0.9rem, 3vw, 1rem);
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      white-space: nowrap;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white !important;
+      border: 3px solid white !important;
+      margin-top: 16px;
+      padding: 12px 28px;
+      font-weight: 900;
+      border-radius: 14px;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      transition: all 0.25s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    }
+
+    /* FOOTER */
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+      text-shadow:0 2px 6px black;
+      padding: 0 10px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+      
+      .card {
+        padding: 14px;
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .actions {
+        margin-left: 0;
+        margin-top: 12px;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .icon {
+        align-self: center;
+      }
+      
+      .content {
+        width: 100%;
+        text-align: center;
+      }
+    }
+    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  min-height: 100dvh; /* 👈 corrige bug de Safari */
+  overflow-x: hidden;
+  background-color: #000; /* evita blancos */
+}
+
+/* El fondo real se genera aquí */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: inherit;    /* usa tu fondo ya definido */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
+/* ============================
+   ✔ TIPOGRAFÍA UNIFICADA
+============================ */
+
+/* Familia tipográfica global */
+body {
+  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
+}
+
+/* TÍTULOS PRINCIPALES */
+h1, .header h1, .title, h2, h3 {
+  font-family: inherit !important;
+  font-weight: 900 !important;
+  letter-spacing: .5px !important;
+  text-align: center !important;
+  color: white !important;
+}
+
+/* SUBTÍTULOS Y DESCRIPCIONES */
+.card p,
+.card span,
+.card small,
+.card div,
+label {
+  font-family: inherit !important;
+  color: white !important;
+  font-weight: 600 !important;
+  line-height: 1.35em !important;
+}
+
+/* ITEMS DE MENÚ Y BLOQUES */
+.card b,
+strong {
+  font-weight: 800 !important;
+  color: white !important;
+}
+
+/* BOTONES */
+.btn,
+.btn * {
+  font-family: inherit !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  color: black !important;
+  letter-spacing: .3px !important;
+}
+
+/* OPCIONES Y SELECT */
+select, option {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  color: black !important;
+}
+
+/* INPUTS */
+input {
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  color: black !important;
+  text-transform: uppercase;
+}
+
+/* PLACEHOLDERS */
+input::placeholder,
+select::placeholder {
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  color: #bbb !important;
+}
+
+/* FOOTER */
+.footer {
+  font-family: inherit !important;
+  font-weight: 400 !important;
+  color: white !important;
+  opacity: .9;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <!-- Contenido principal -->
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header"><h1>GESTOR DE INFORMES</h1></div>
+
+      <div class="grid" role="list">
+        <!-- Crear nuevo informe -->
+        <article class="card" role="listitem">
+          <div class="icon">📋</div>
+          <div class="content">
+            <h2 class="title">Crear Informe</h2>
+            <p class="desc">Generar un nuevo informe de trabajo con detalles completos y costos.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="informes.html" target="_blank">Abrir</a>
+          </div>
+        </article>
+
+        <!-- Buscar informes -->
+        <article class="card" role="listitem">
+          <div class="icon">🔎</div>
+          <div class="content">
+            <h2 class="title">Buscar Informes</h2>
+            <p class="desc">Consultar informes anteriores por patente, OT o cliente.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="buscar_informes.html">Abrir</a>
+          </div>
+        </article>
+      </div>
+
+      <div style="text-align:center; margin-top: 30px;">
+        <a href="index.html" class="btn-secondary">← Panel Principal</a>
+      </div>
+    </div>
+
+    <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+  </div>
+
+  <!-- Scripts para PWA -->
+  <script>
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registrado con éxito:', registration.scope);
+          })
+          .catch(function(error) {
+            console.log('Error al registrar el Service Worker:', error);
+          });
+      });
+    }
+
+    // Instalar la PWA
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevenir que el navegador muestre automáticamente el prompt
+      e.preventDefault();
+      // Guardar el evento para usarlo después
+      deferredPrompt = e;
+      // Opcional: mostrar un botón para instalar la app
+      console.log('PWA puede ser instalada');
+    });
+  </script>
+
+  <!-- PWA: navegación interna en modo standalone -->
+  <script>
+  (function () {
+    const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    if (!isStandalone) return;
+
+    const EXTERN = new Set([
+      'https://www.patentechile.com/',
+      'https://taller-todo.vercel.app/informes.html',
+      'https://taller-todo.vercel.app/buscador_averias.html'
+    ]);
+
+    const toURL = (h) => { try { return new URL(h, location.href); } catch { return null; } };
+    const sameOrigin = (u) => u && u.origin === location.origin;
+    const fileName = (u) => u ? u.pathname.split('/').pop() : '';
+    const go = (u) => location.assign(u.pathname + u.search + u.hash);
+
+    // 1) Enlaces <a>: internos -> misma ventana (evita la vista con "Listo")
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href]'); if (!a) return;
+      if (a.hasAttribute('download') || a.href.startsWith('mailto:') || a.href.startsWith('tel:')) return;
+      const u = toURL(a.getAttribute('href')); if (!u) return;
+
+      const isExternalWhitelisted =
+        EXTERN.has(u.href) || EXTERN.has(fileName(u));
+
+      // Permitir que informes.html se abra en nueva pestaña
+      if (fileName(u) === 'informes.html') {
+        // No hacer nada, dejar que se abra en nueva pestaña
+        return;
+      }
+
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        e.preventDefault();
+        go(u);
+      }
+      // Externos o whitelisted: respetamos su comportamiento (podrán abrir Safari).
+    }, true); // captura
+
+    // 2) window.open internos -> misma ventana (salvo EXTERN)
+    const _open = window.open;
+    window.open = function (url, target, features) {
+      const u = toURL(url);
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      if (sameOrigin(u) && !isExternalWhitelisted) {
+        go(u);
+        return null;
+      }
+      return _open.call(window, url, target, features);
+    };
+
+    // 3) Formularios internos -> _self
+    document.addEventListener('submit', (e) => {
+      const f = e.target;
+      if (!(f && f.tagName === 'FORM')) return;
+      const u = toURL(f.getAttribute('action') || location.href);
+      if (sameOrigin(u)) f.target = '_self';
+    }, true);
+
+    // 4) Limpieza: si quedó algún _blank interno por error, quítalo
+    document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+      const u = toURL(a.getAttribute('href'));
+      const isExternalWhitelisted =
+        EXTERN.has(u?.href) || EXTERN.has(fileName(u));
+      // Mantener target="_blank" solo para informes.html
+      if (fileName(u) !== 'informes.html' && sameOrigin(u) && !isExternalWhitelisted) {
+        a.removeAttribute('target');
+      }
+    });
+  })();
+  </script>
+  
+  <!-- Script de Vercel (mantenido del código original) -->
+  <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

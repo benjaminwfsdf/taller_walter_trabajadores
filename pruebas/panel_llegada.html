@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Panel de Turnos | Walter Uriol</title>
+<meta name="theme-color" content="#1d3053"/>
+
+<link rel="manifest" href="/manifest.json" />
+
+<style>
+/* ============================
+   VARIABLES DE DISEÑO ESTILO 1
+============================ */
+:root{
+  --brand:#d40000;
+  --brand-dark:#9b0000;
+  --blue:#1d3053;
+  --blue-dark:#1d3053;
+  --ink:#ffffff;
+  --radius:18px;
+  --shadow:0 12px 30px rgba(0,0,0,.45);
+  --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+
+/* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================
+   FONDO GENERAL
+============================ */
+body{
+  position: relative;
+  min-height: 100dvh; /* 👈 corrige bug de Safari */
+  overflow-x: hidden;
+  background-color: #000; /* evita blancos */
+  font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+  color:white;
+}
+
+/* El fondo real se genera aquí */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("img/portada_celular.png") no-repeat center/cover;
+  z-index:-1;
+  pointer-events:none;
+}
+
+/* ============================
+   TOPBAR
+============================ */
+.topbar{
+  background:#1d3053;
+  padding:14px;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.6px;
+  border-bottom:5px solid var(--brand);
+  box-shadow:var(--shadow-soft);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+/* ============================
+   CONTENEDOR PRINCIPAL
+============================ */
+.wrapper{
+  max-width:1300px;
+  margin:40px auto 50px;
+  padding:0 20px;
+  width: 100%;
+}
+
+.frame{
+  background:rgba(135,206,250,0.35);
+  border-radius:var(--radius);
+  padding:24px;
+  box-shadow:var(--shadow);
+  border:3px solid var(--brand);
+  backdrop-filter:blur(8px);
+}
+
+/* ============================
+   GRID
+============================ */
+.grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:22px;
+}
+
+@media(max-width:1100px){
+  .grid{ grid-template-columns:1fr; }
+}
+
+/* ============================
+   TARJETA AZUL
+============================ */
+.card{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+
+.card h2{
+  margin:0 0 12px 0;
+  font-size:1.4rem;
+  font-weight:900;
+}
+
+/* ============================
+   RELOJ
+============================ */
+.time{
+  font-size:clamp(2.6rem,6vw,4.8rem);
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+
+.time .sec{
+  font-size:.45em;
+  opacity:.7;
+  margin-left:8px;
+}
+
+.date{
+  font-size:1.2rem;
+  opacity:.9;
+}
+
+/* ============================
+   CLIMA
+============================ */
+.wx-now{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.wx-temp{
+  font-size:clamp(2.5rem,4.2vw,3.3rem);
+  font-weight:900;
+}
+
+.wx-icon{
+  font-size:2.6rem;
+}
+
+.wx-box{
+  background:rgba(0,0,0,0.25);
+  border:2px solid var(--brand);
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+  margin-top:10px;
+}
+
+.wx-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:10px;
+}
+
+.wx-box-grid{
+  background:rgba(0,0,0,0.25);
+  border:2px solid var(--brand);
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+}
+
+/* ============================
+   TURNOS
+============================ */
+.patente{
+  font-size:2.2rem;
+  font-weight:900;
+  color:#3ddc97;
+  text-align:center;
+}
+
+.modelo{
+  text-align:center;
+  opacity:.9;
+  margin-top:8px;
+}
+
+.proximo{
+  background:#1d3053;
+  border:3px solid var(--brand);
+  padding:12px;
+  border-radius:16px;
+  margin-top:12px;
+  text-align:center;
+  font-size:1.3rem;
+}
+
+/* ============================
+   BOTONES
+============================ */
+.btn{
+  background:white;
+  color:black;
+  padding:12px 22px;
+  border-radius:14px;
+  border:3px solid var(--brand);
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+  text-align:center;
+  width:100%;
+  margin-top:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,.35);
+}
+
+.btn:hover{
+  background:var(--blue-dark);
+  color:white;
+  border-color:var(--brand-dark);
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.btn-control{
+  background:white;
+  color:black;
+  padding:12px 16px;
+  border-radius:14px;
+  border:3px solid var(--brand);
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+  text-align:center;
+  min-width:180px;
+  box-shadow:0 4px 10px rgba(0,0,0,.35);
+}
+
+.btn-control:hover{
+  background:var(--blue-dark);
+  color:white;
+  border-color:var(--brand-dark);
+}
+
+/* ============================
+   FULLSCREEN
+============================ */
+.fs{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:white;
+  border:3px solid var(--brand);
+  color:black;
+  font-weight:900;
+  padding:12px;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:.25s;
+}
+
+.fs:hover{
+  background:var(--blue-dark);
+  color:white;
+}
+
+/* ============================
+   TITULOS
+============================ */
+.section-title{
+  font-size:1.4rem;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+/* ============================
+   STATUS INDICATOR
+============================ */
+.status{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#b9c0c7;
+  font-size:14px;
+  margin-top:10px;
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#6b7280;
+}
+
+.dot.live{
+  background:#16a34a;
+  box-shadow:0 0 0 3px rgba(22,163,74,.22);
+}
+
+/* ============================
+   MUTED TEXT
+============================ */
+.muted{
+  color:#b9c0c7;
+}
+
+/* Mejoras para móviles */
+@media (max-width: 480px) {
+  .wrapper {
+    margin: 20px auto 40px;
+    padding: 0 12px;
+  }
+  
+  .frame {
+    padding: 16px;
+  }
+  
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-control {
+    width: 100%;
+    min-width: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+<div class="wrapper">
+<div class="frame">
+
+  <div class="grid">
+
+    <!-- ============================
+         COLUMNA IZQUIERDA
+    ============================= -->
+    <div>
+
+      <!-- Reloj -->
+      <div class="card">
+        <div class="time" id="hora">--:-- <span class="sec">--</span></div>
+        <div class="date" id="fecha">---</div>
+      </div>
+
+      <!-- Clima -->
+      <div class="card">
+        <h2>Clima</h2>
+
+        <div class="wx-now">
+          <div class="wx-temp"><span id="tActual">--</span>°</div>
+
+          <div>
+            <div id="wxText">Cargando…</div>
+            <div class="wx-icon" id="wxEmoji"></div>
+          </div>
+        </div>
+
+        <div class="wx-grid">
+          <div class="wx-box-grid">
+            <div class="muted">Mín</div>
+            <div><b id="tMin">--°</b></div>
+          </div>
+          <div class="wx-box-grid">
+            <div class="muted">Máx</div>
+            <div><b id="tMax">--°</b></div>
+          </div>
+          <div class="wx-box-grid">
+            <div class="muted">Viento</div>
+            <div><b id="viento">-- km/h</b></div>
+          </div>
+        </div>
+
+        <div class="status" aria-live="polite">
+          <span class="dot" id="dot"></span>
+          <span id="stat">Cargando clima…</span>
+        </div>
+
+        <div class="controls">
+          <button class="btn-control" id="btnFull">⛶ Pantalla completa</button>
+          <button class="btn-control" id="btnRefresh">↻ Actualizar clima</button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ============================
+         COLUMNA DERECHA
+    ============================= -->
+    <div>
+
+      <h2 class="section-title">🔧 Turnos en Espera</h2>
+
+      <div id="totalPendientes" class="muted" style="margin:6px 0 10px">Autos en espera: 0</div>
+
+      <div class="card" id="actual">
+        <div class="patente">---</div>
+        <div class="modelo">---</div>
+      </div>
+
+      <h2 class="section-title">🔜 Próximos</h2>
+
+      <div id="siguientes"></div>
+
+    </div>
+
+
+
+  </div><!-- grid -->
+
+</div><!-- frame -->
+</div><!-- wrapper -->
+
+<button class="fs" id="fsBtn">⛶</button>
+
+<!-- ============================
+     SCRIPTS
+============================ -->
+
+<script>
+/* ========== UTILIDADES ========== */
+const pad = n => String(n).padStart(2, "0");
+
+/* ========== RELOJ ========== */
+let hourFormat = localStorage.getItem("hourFormat") || "24";
+
+function tick(){
+  const d = new Date();
+  let h = d.getHours(), ampm = "";
+  
+  if (hourFormat === "12") { 
+    ampm = h >= 12 ? "PM" : "AM"; 
+    h = (h % 12) || 12; 
+  }
+  
+  document.getElementById("hora").innerHTML = `${pad(h)}:${pad(d.getMinutes())} <span class="sec">${pad(d.getSeconds())}${ampm ? (" " + ampm) : ""}</span>`;
+
+  const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+  document.getElementById("fecha").textContent = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]}`;
+
+  setTimeout(tick, 1000);
+}
+tick();
+
+/* ========== CLIMA ========== */
+let unit = localStorage.getItem("unit") || "C";
+const toUnit = c => unit === "F" ? Math.round(c * 9/5 + 32) : Math.round(c);
+const unitLabel = () => unit === "F" ? "°F" : "°C";
+
+function wxDesc(code){
+  const t = {
+    0: "Despejado", 1: "Mayormente despejado", 2: "Parcial nublado", 3: "Nublado",
+    45: "Niebla", 48: "Escarcha",
+    51: "Llovizna ligera", 53: "Llovizna", 55: "Llovizna fuerte",
+    61: "Lluvia ligera", 63: "Lluvia", 65: "Lluvia fuerte",
+    80: "Chubascos", 81: "Chubascos fuertes", 82: "Chubascos violentos",
+    95: "Tormenta eléctrica"
+  };
+  return t[code] || "Clima";
+}
+
+function wxEmoji(code){
+  if ([0, 1].includes(code)) return "☀️";
+  if ([2, 3, 45].includes(code)) return "☁️";
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return "🌧️";
+  if ([95].includes(code)) return "⛈️";
+  return "🌤️";
+}
+
+async function cargarClima(){
+  try{
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=-33.45&longitude=-70.72&current=temperature_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto";
+    const r = await fetch(url, {cache: "no-store"});
+    const d = await r.json();
+
+    const now = d.current;
+    document.getElementById("tActual").textContent = toUnit(now.temperature_2m);
+    document.getElementById("tMin").textContent = toUnit(d.daily.temperature_2m_min[0]) + unitLabel();
+    document.getElementById("tMax").textContent = toUnit(d.daily.temperature_2m_max[0]) + unitLabel();
+    document.getElementById("viento").textContent = Math.round(now.wind_speed_10m) + " km/h";
+
+    document.getElementById("wxText").textContent = wxDesc(now.weather_code);
+    document.getElementById("wxEmoji").textContent = wxEmoji(now.weather_code);
+
+    document.getElementById("stat").textContent = "Clima actualizado";
+    document.getElementById("dot").classList.add("live");
+
+  } catch(e) {
+    document.getElementById("wxText").textContent = "No disponible";
+    document.getElementById("stat").textContent = "Clima no disponible";
+    document.getElementById("dot").classList.remove("live");
+  }
+}
+
+cargarClima();
+setInterval(cargarClima, 15 * 60 * 1000); // Actualizar cada 15 minutos
+
+/* ========== TURNOS ========== */
+const API_URL = "https://script.google.com/macros/s/AKfycby1tUw1YO-pfokPK7900LP5Y8o98P-i-q3LZm4ZeHCUNagRWelexYutnJK1nk2L2eYs/exec";
+
+async function obtenerClientes(){
+  try{
+    const r = await fetch(`${API_URL}?funcion=obtenerClientes`);
+    return await r.json();
+  } catch(e) {
+    console.error("Error al obtener clientes", e);
+    return [];
+  }
+}
+
+async function actualizarVista(){
+  const lista = await obtenerClientes();
+
+  const actual = document.getElementById("actual");
+  const siguientes = document.getElementById("siguientes");
+  const total = document.getElementById("totalPendientes");
+
+  siguientes.innerHTML = "";
+
+  if (!lista.length){
+    actual.innerHTML = `<div class="patente">---</div><div class="modelo">Sin autos</div>`;
+    total.textContent = "Autos en espera: 0";
+    return;
+  }
+
+  const c0 = lista[0];
+  actual.innerHTML = `
+    <div class="patente">🚗 ${c0.Patente || "-"}</div>
+    <div class="modelo">${c0.Modelo || "-"}</div>
+  `;
+
+  total.textContent = `Autos en espera: ${Math.max(0, lista.length - 1)}`;
+
+  // Mostrar solo los próximos 2 turnos
+  lista.slice(1, 3).forEach(c => {
+    const div = document.createElement("div");
+    div.className = "proximo";
+    div.innerHTML = `🚗 <b>${c.Patente}</b> — ${c.Modelo}`;
+    siguientes.appendChild(div);
+  });
+}
+
+setInterval(actualizarVista, 3000);
+actualizarVista();
+
+/* ========== FULLSCREEN ========== */
+function toggleFullscreen(){
+  if (!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+document.getElementById("btnFull").addEventListener("click", toggleFullscreen);
+document.getElementById("fsBtn").addEventListener("click", toggleFullscreen);
+document.getElementById("btnRefresh").addEventListener("click", cargarClima);
+</script>
+
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

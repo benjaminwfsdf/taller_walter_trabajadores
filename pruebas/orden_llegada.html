@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1d3053" />
+  <title>Recepción de Clientes | Walter Uriol</title>
+
+  <link rel="manifest" href="/manifest.json" />
+
+  <style>
+    :root{
+      --brand:#d40000;
+      --brand-dark:#9b0000;
+      --blue:#1d3053;
+      --blue-dark:#1d3053;
+      --ink:#ffffff;
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    *{ box-sizing:border-box; }
+
+    /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+      position: relative;
+      min-height: 100dvh; /* 👈 corrige bug de Safari */
+      overflow-x: hidden;
+      background-color: #000; /* evita blancos */
+      font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:white;
+    }
+
+    /* El fondo real se genera aquí */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:url("img/portada_celular.png") no-repeat center/cover;
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    .topbar{
+      background:#1d3053;
+      text-align:center;
+      padding:14px;
+      font-weight:800;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width: 100%;
+    }
+
+    .frame{
+      background:rgba(135,206,250,0.35);
+      border-radius:var(--radius);
+      padding:22px;
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+      box-shadow:var(--shadow);
+    }
+
+    .header{
+      background:#1d3053;
+      padding:20px;
+      border-radius:16px;
+      border:3px solid var(--brand);
+      text-align:center;
+      margin-bottom:22px;
+      font-weight:900;
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(1.6rem,5vw,2.3rem);
+    }
+
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:22px;
+      box-shadow:var(--shadow);
+    }
+
+    label{
+      font-weight:700;
+      margin-bottom:6px;
+      display:block;
+    }
+
+    input{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:2px solid rgba(255,255,255,0.25);
+      background:rgba(0,0,0,0.3);
+      color:white;
+      margin-bottom:14px;
+      text-transform:uppercase;
+    }
+
+    input:focus{
+      outline:none;
+      border-color:var(--brand);
+    }
+
+    .btn{
+      width:100%;
+      background:white;
+      color:black;
+      padding:14px;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      font-weight:800;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      cursor:pointer;
+      margin-top:10px;
+      transition:.25s;
+      text-align:center;
+    }
+
+    .btn:hover{
+      background:var(--blue-dark);
+      color:white;
+      border-color:var(--brand-dark);
+    }
+
+    .block{
+      background:#1d3053;
+      padding:20px;
+      border-radius:16px;
+      border:3px solid var(--brand);
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+
+    .patente-actual{
+      font-size:clamp(2.2rem,7vw,3rem);
+      font-weight:900;
+      color:#3ddc97;
+      margin-top:10px;
+      letter-spacing:2px;
+    }
+
+    .modelo-actual{
+      opacity:.9;
+      margin-bottom:14px;
+    }
+
+    .subtitulo{
+      font-size:1.3rem;
+      text-align:center;
+      margin-top:20px;
+      font-weight:800;
+    }
+
+    .proximo{
+      background:#1d3053;
+      border-radius:12px;
+      border:2px solid var(--brand);
+      padding:12px;
+      margin-top:10px;
+      text-align:center;
+      box-shadow:var(--shadow-soft);
+      font-size:1.2rem;
+    }
+
+    .back{
+      display:block;
+      margin-top:22px;
+      background:white;
+      color:black;
+      padding:12px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      text-align:center;
+      text-decoration:none;
+      transition:.25s;
+    }
+
+    .back:hover{
+      background:var(--blue-dark);
+      color:white;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:20px;
+      opacity:.9;
+      font-size:13px;
+    }
+
+    #proximos{
+      max-height:45vh;
+      overflow:auto;
+      margin-top:12px;
+    }
+
+    /* Mejoras para móviles */
+    @media (max-width: 480px) {
+      .wrapper {
+        margin: 20px auto 40px;
+        padding: 0 12px;
+      }
+      
+      .frame {
+        padding: 16px;
+      }
+    }
+
+    /* Estilos para la pantalla de carga */
+   
+    @keyframes glow{
+      from{ filter: drop-shadow(0 6px 16px rgba(144,0,0,.25)); }
+      to  { filter: drop-shadow(0 12px 28px rgba(144,0,0,.45)); }
+   
+    }
+  </style>
+
+  <!-- Script para Service Worker (del segundo código) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js");
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+
+      <div class="header"><h1>Recepción y Turnos</h1></div>
+
+      <!-- Formulario -->
+      <div class="card">
+        <label>Patente</label>
+        <input id="patente" placeholder="ABCD12">
+
+        <label>Modelo</label>
+        <input id="modelo" placeholder="TOYOTA HILUX">
+
+        <button class="btn" onclick="agregarCliente()">➕ Añadir Cliente</button>
+
+        <div id="confirmacion" style="text-align:center;font-weight:900;color:#3ddc97;margin-top:10px"></div>
+      </div>
+
+      <!-- Turno actual -->
+      <div class="block" id="turnoActual">
+        <div style="font-weight:700">🔧 En Atención</div>
+        <div class="patente-actual" id="patenteActual">---</div>
+        <div class="modelo-actual" id="modeloActual">---</div>
+
+        <button class="btn" onclick="marcarComoListo()">✔ Marcar como Listo</button>
+      </div>
+
+      <div class="subtitulo" id="contadorTotal">🚘 Autos en espera: 0</div>
+
+      <div class="subtitulo">🔜 Próximos</div>
+      <div id="proximos"></div>
+
+      <a class="back" href="index.html">← Volver al Panel</a>
+
+      <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+
+    </div>
+  </div>
+
+  <script>
+    /* === API === */
+    const API_URL =
+    "https://script.google.com/macros/s/AKfycby1tUw1YO-pfokPK7900LP5Y8o98P-i-q3LZm4ZeHCUNagRWelexYutnJK1nk2L2eYs/exec";
+
+    function agregarCliente(){
+      const p=document.getElementById("patente").value.trim().toUpperCase();
+      const m=document.getElementById("modelo").value.trim().toUpperCase();
+      if(!p||!m){ alert("Completa los campos."); return; }
+      fetch(`${API_URL}?funcion=agregarCliente&patente=${p}&modelo=${m}`)
+      .then(()=>{
+        document.getElementById("confirmacion").textContent="✔ Registrado.";
+        setTimeout(()=>document.getElementById("confirmacion").textContent="",2500);
+        document.getElementById("patente").value="";
+        document.getElementById("modelo").value="";
+        setTimeout(cargarTurnos,600);
+      });
+    }
+
+    function marcarComoListo(){
+      fetch(`${API_URL}?funcion=eliminarPrimero`)
+      .then(()=>setTimeout(cargarTurnos,600));
+    }
+
+    function cargarTurnos(){
+      fetch(`${API_URL}?funcion=obtenerClientes`)
+      .then(r=>r.json())
+      .then(lista=>{
+        
+        if(!lista || !lista.length){
+          document.getElementById("patenteActual").textContent="---";
+          document.getElementById("modeloActual").textContent="---";
+          document.getElementById("contadorTotal").textContent="Autos en espera: 0";
+          document.getElementById("proximos").innerHTML="";
+          return;
+        }
+
+        const actual = lista[0];
+        const proxs = lista.slice(1);
+
+        document.getElementById("patenteActual").textContent = actual.Patente || "-";
+        document.getElementById("modeloActual").textContent  = actual.Modelo || "-";
+
+        document.getElementById("contadorTotal").textContent =
+          `🚘 Autos en espera: ${Math.max(0, lista.length-1)}`;
+
+        const cont = document.getElementById("proximos");
+        cont.innerHTML = "";
+        proxs.forEach(c=>{
+          cont.innerHTML += `<div class="proximo">🚗 <b>${c.Patente}</b> — ${c.Modelo}</div>`;
+        });
+
+      });
+    }
+
+
+    // Actualizar turnos cada 3 segundos
+    setInterval(cargarTurnos, 3000);
+    // Cargar turnos iniciales
+    cargarTurnos();
+  </script>
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

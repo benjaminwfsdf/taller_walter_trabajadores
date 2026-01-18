@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base target="_self">
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Taller">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <meta name="theme-color" content="#000000">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="img/scanner.png">
+  <title>Buscar Vehículo | Walter Uriol</title>
+
+  <style>
+    :root{
+      --brand:#d40000;
+      --brand-dark:#9b0000;
+      --blue:#1d3053;
+      --blue-dark:#1d3053;
+      --ink:#ffffff;
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100dvh;
+      overflow-x:hidden;
+      font-family:system-ui,Segoe UI,Roboto,Arial;
+
+      background:url("img/portada_celular.png") no-repeat center/cover fixed;
+      background-color:#000;
+    }
+
+    @media(min-width:768px){
+      body{
+        background:url("img/portada_pc.png") no-repeat center/cover fixed;
+      }
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .wrapper{
+      max-width:1100px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width:100%;
+    }
+
+    .frame{
+      background:rgba(135,206,250,0.35);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+      margin:0 auto;
+    }
+
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      margin-bottom:22px;
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(1.6rem,5vw,2.3rem);
+    }
+
+    .card{
+      background:#1d3053;
+      border:3px solid var(--brand);
+      border-radius:16px;
+      padding:22px;
+      margin-bottom:22px;
+      box-shadow:var(--shadow);
+    }
+
+    label{
+      display:block;
+      margin:8px 0 6px;
+      font-weight:800;
+      color:white;
+    }
+
+    input{
+      width:100%;
+      padding:12px 14px;
+      border:2px solid rgba(255,255,255,0.2);
+      border-radius:12px;
+      background:rgba(0,0,0,0.3);
+      color:white !important;
+      font-size:1.1rem;
+      text-transform:uppercase;
+    }
+
+    .btn{
+      background:white;
+      color:black;
+      padding:12px 24px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      width:100%;
+      margin-top:18px;
+      cursor:pointer;
+    }
+
+    .result-block{
+      margin-top:20px;
+      background:rgba(0,0,0,0.35);
+      border:2px solid var(--brand);
+      border-radius:12px;
+      padding:18px;
+      color:white;
+      font-size:1rem;
+    }
+
+    .ultimo{
+      border:3px solid #00ff8c !important;
+      box-shadow:0 0 14px #00ff8c !important;
+    }
+    
+    .hoja1{
+      border-left:5px solid #4caf50 !important;
+    }
+    
+    .datosinforme{
+      border-left:5px solid #2196f3 !important;
+    }
+
+    .item strong{
+      color:#a8f0a9;
+      display:inline-block;
+      min-width:140px;
+    }
+    
+    .fuente-badge{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:10px;
+      font-size:0.8rem;
+      font-weight:bold;
+      margin-left:10px;
+    }
+    
+    .fuente-hoja1{
+      background:#4caf50;
+      color:white;
+    }
+    
+    .fuente-datosinforme{
+      background:#2196f3;
+      color:white;
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:white !important;
+      border:3px solid white !important;
+      padding:12px 24px;
+      border-radius:14px;
+      font-weight:900;
+      display:inline-block;
+      margin-top:20px;
+      text-align:center;
+      text-decoration:none;
+    }
+
+    .footer{
+      text-align:center;
+      color:white;
+      font-size:13px;
+      margin-top:22px;
+    }
+    
+    /* Estilos para los montos financieros */
+    .monto{
+      color:#ffcc00;
+      font-weight:bold;
+    }
+    
+    .saldo-pendiente{
+      color:#ff6b6b;
+      font-weight:bold;
+    }
+    
+    .saldo-pagado{
+      color:#4caf50;
+      font-weight:bold;
+    }
+    
+    .result-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,0.2);
+    }
+    
+    .patente-title{
+      color:#ffcc00;
+      font-size:1.2rem;
+      font-weight:bold;
+    }
+    
+    .separador-fuentes{
+      background:rgba(255,255,255,0.1);
+      padding:10px;
+      border-radius:8px;
+      margin:20px 0 10px;
+      text-align:center;
+      font-weight:bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+      <div class="header"><h1>Buscar Vehículo</h1></div>
+
+      <div class="card">
+        <label id="labelTipo">Buscar por Patente:</label>
+        <input type="text" id="valor" placeholder="INGRESA LA PATENTE" autocomplete="off">
+
+        <button class="btn" onclick="buscar()">🔍 Buscar</button>
+
+        <div id="historial"></div>
+
+        <a href="gestion_informes.html" class="btn-secondary">← Volver al Menú Principal</a>
+      </div>
+
+      <div class="footer">© 2025 Benjamín González — Todos los derechos reservados.</div>
+    </div>
+  </div>
+
+<script>
+// REEMPLAZA CON TU URL DE GOOGLE APPS SCRIPT
+const API_URL = "https://script.google.com/macros/s/AKfycbw6X0uuAlMz-k3PbquHLLFftJyRJJDkxwNPmdYljFSd__jaLu9DAbHufoCcOAhIopf4cw/exec";
+
+// Funciones auxiliares
+const norm = t => String(t||"")
+  .normalize("NFD").replace(/\p{Diacritic}/gu,"")
+  .toUpperCase().trim();
+
+function formatearFecha(f){
+  if(!f) return "-";
+  try {
+    // Si es un objeto Date o string ISO
+    const d = new Date(f);
+    if(isNaN(d.getTime())) {
+      // Si es string en formato dd/mm/yyyy
+      const parts = f.split('/');
+      if(parts.length === 3) {
+        return f;
+      }
+      return f;
+    }
+    return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+  } catch(e) {
+    return f;
+  }
+}
+
+function formatearKM(v){
+  if(!v) return "-";
+  const num = parseFloat(v);
+  if(isNaN(num)) return v;
+  return num.toLocaleString('es-CL');
+}
+
+function formatearMoneda(v){
+  if(!v) return "$0";
+  const num = parseFloat(v);
+  if(isNaN(num)) return "$0";
+  return "$" + num.toLocaleString("es-CL");
+}
+
+function calcularSaldo(total, abono){
+  const t = parseFloat(total) || 0;
+  const a = parseFloat(abono) || 0;
+  return t - a;
+}
+
+async function buscar(){
+  const val = document.getElementById("valor").value.trim();
+  if(!val){ 
+    alert("Ingresa una patente"); 
+    return; 
+  }
+
+  const patente = norm(val);
+  const cont = document.getElementById("historial");
+  cont.innerHTML = "<div class='result-block'>Buscando...</div>";
+
+  try {
+    // Llamar a la API con el parámetro action
+    const url = `${API_URL}?action=buscarPorPatente&patente=${encodeURIComponent(patente)}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if(!data.success) {
+      cont.innerHTML = `<div class="result-block">Error en la búsqueda</div>`;
+      return;
+    }
+    
+    const registros = data.registros || [];
+    
+    if(registros.length === 0){
+      cont.innerHTML = `<div class="result-block">No se encontraron registros para la patente ${patente}</div>`;
+      return;
+    }
+    
+    // Separar registros por fuente
+    const registrosHoja1 = registros.filter(r => r.Fuente === "Hoja1");
+    const registrosInforme = registros.filter(r => r.Fuente === "DatosInforme");
+    
+    // Ordenar por fecha (más reciente primero)
+    registrosHoja1.sort((a,b) => new Date(b.Fecha || 0) - new Date(a.Fecha || 0));
+    registrosInforme.sort((a,b) => new Date(b.Fecha || 0) - new Date(a.Fecha || 0));
+    
+    // Mostrar resultados
+    cont.innerHTML = "";
+    
+    // Mostrar título principal
+    const titulo = document.createElement("div");
+    titulo.className = "result-block";
+    titulo.innerHTML = `<h3 style="color:white;text-shadow:0 3px 8px black;margin:0;">
+      Historial completo de ${patente}
+    </h3>`;
+    cont.appendChild(titulo);
+    
+    // Mostrar registros de DatosInforme (OT completas)
+    if(registrosInforme.length > 0) {
+      const separador = document.createElement("div");
+      separador.className = "separador-fuentes";
+      separador.innerHTML = "📋 ÓRDENES DE TRABAJO COMPLETAS";
+      cont.appendChild(separador);
+      
+      registrosInforme.forEach((r,i)=>{
+        const saldo = calcularSaldo(r.Total, r.Abono);
+        const saldoClass = saldo > 0 ? "saldo-pendiente" : "saldo-pagado";
+        
+        const box = document.createElement("div");
+        box.className = "result-block datosinforme " + (i===0 ? "ultimo" : "");
+        
+        const badge = `<span class="fuente-badge fuente-datosinforme">OT Completa</span>`;
+        
+        box.innerHTML = `
+          <div class="result-header">
+            <div class="patente-title">OT: ${r.OT || "-"}</div>
+            ${badge}
+          </div>
+          <div class="item"><strong>Fecha:</strong> ${formatearFecha(r.Fecha)}</div>
+          <div class="item"><strong>OT:</strong> ${r.OT || "-"}</div>
+          <div class="item"><strong>Nombre:</strong> ${r.Nombre || "-"}</div>
+          <div class="item"><strong>Teléfono:</strong> ${r.Telefono || "-"}</div>
+          <div class="item"><strong>Dirección:</strong> ${r.Direccion || "-"}</div>
+          <div class="item"><strong>Marca:</strong> ${r.Marca || "-"}</div>
+          <div class="item"><strong>Modelo:</strong> ${r.Modelo || "-"}</div>
+          <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r.Kilometraje)}</div>
+          <div class="item"><strong>Detalle trabajo:</strong> ${r.DetalleTabla || "-"}</div>
+          <div class="item"><strong>Observaciones:</strong> ${r.Observaciones || "-"}</div>
+          <div class="item"><strong>Son:</strong> ${r.Son || "-"}</div>
+          <div class="item"><strong>Total:</strong> <span class="monto">${formatearMoneda(r.Total)}</span></div>
+          <div class="item"><strong>Abono:</strong> <span class="monto">${formatearMoneda(r.Abono)}</span></div>
+          <div class="item"><strong>Saldo:</strong> <span class="${saldoClass}">${formatearMoneda(r.Saldo || saldo)}</span></div>
+        `;
+        cont.appendChild(box);
+      });
+    }
+    
+    // Mostrar registros de Hoja 1 (visitas/reparaciones)
+    if(registrosHoja1.length > 0) {
+      const separador = document.createElement("div");
+      separador.className = "separador-fuentes";
+      separador.innerHTML = "🔧 VISITAS / REPARACIONES";
+      cont.appendChild(separador);
+      
+      registrosHoja1.forEach((r,i)=>{
+        const box = document.createElement("div");
+        box.className = "result-block hoja1 " + (i===0 ? "ultimo" : "");
+        
+        const badge = `<span class="fuente-badge fuente-hoja1">Visita</span>`;
+        
+        box.innerHTML = `
+          <div class="result-header">
+            <div class="patente-title">OT: ${r.OrdenTrabajo || "-"}</div>
+            ${badge}
+          </div>
+          <div class="item"><strong>Fecha:</strong> ${formatearFecha(r.Fecha)}</div>
+          <div class="item"><strong>OT:</strong> ${r.OrdenTrabajo || "-"}</div>
+          <div class="item"><strong>Nombre:</strong> ${r.Nombre || "-"}</div>
+          <div class="item"><strong>Teléfono:</strong> ${r.Telefono || "-"}</div>
+          <div class="item"><strong>Dirección:</strong> ${r.Direccion || "-"}</div>
+          <div class="item"><strong>Marca:</strong> ${r.Marca || "-"}</div>
+          <div class="item"><strong>Modelo:</strong> ${r.Modelo || "-"}</div>
+          <div class="item"><strong>Kilometraje:</strong> ${formatearKM(r.Kilometraje)}</div>
+          <div class="item"><strong>Estado:</strong> ${r.Estado || "-"}</div>
+          <div class="item"><strong>Detalle:</strong> ${r.Detalle || "-"}</div>
+        `;
+        cont.appendChild(box);
+      });
+    }
+    
+    // Mostrar resumen
+    const resumen = document.createElement("div");
+    resumen.className = "result-block";
+    resumen.innerHTML = `
+      <div style="text-align:center; font-weight:bold; color:#ffcc00;">
+        RESUMEN: ${registrosInforme.length} OT(s) completas • ${registrosHoja1.length} visita(s)
+      </div>
+    `;
+    cont.appendChild(resumen);
+    
+  } catch(error) {
+    console.error("Error:", error);
+    cont.innerHTML = `<div class="result-block">Error al buscar: ${error.message}</div>`;
+  }
+}
+
+// Permitir buscar con Enter
+document.getElementById("valor").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    buscar();
+  }
+});
+
+// Enfocar el campo de búsqueda al cargar
+window.onload = function() {
+  document.getElementById("valor").focus();
+}
+</script>
+
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>

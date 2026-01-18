@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Tarjeta virtual</title>
+
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="img/logo.png" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <style>
+    :root{
+      --brand:#d40000;
+      --brand-dark:#9b0000;
+
+      --blue:#1d3053;
+      --ink:#ffffff;
+
+      --radius:18px;
+      --shadow:0 12px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.25);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      background-image: url("img/portada_celular.png");
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center;
+      background-attachment:scroll;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* TOPBAR */
+    .topbar{
+      background:#1d3053;
+      color:white;
+      text-align:center;
+      padding:14px;
+      font-weight:700;
+      letter-spacing:.8px;
+      border-bottom:5px solid var(--brand);
+      box-shadow:var(--shadow-soft);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    /* WRAPPER */
+    .wrapper{
+      max-width:900px;
+      margin:38px auto 60px;
+      padding:0 22px;
+      width:100%;
+    }
+
+    /* FRAME */
+    .frame{
+      background:rgba(135,206,250,0.35);
+      border-radius:var(--radius);
+      padding:26px;
+      box-shadow:var(--shadow);
+      border:3px solid var(--brand);
+      backdrop-filter:blur(8px);
+      margin:0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      background:#1d3053;
+      color:white;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      font-weight:900;
+      border:3px solid var(--brand);
+      text-shadow:0 3px 8px rgba(0,0,0,.6);
+      margin-bottom:20px;
+    }
+
+    .header h1{
+      margin:0;
+      font-size:clamp(1.5rem,5vw,2.2rem);
+    }
+
+    /* GRID BOTONES */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+      padding:12px;
+    }
+    @media(max-width:700px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* BOTONES */
+    .btn{
+      background:#1d3053;
+      color:white !important;
+      padding:14px 16px;
+      font-weight:900;
+      border-radius:14px;
+      text-decoration:none;
+      text-align:center;
+      border:3px solid var(--brand);
+      transition:.25s;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+      font-size:clamp(0.9rem,3vw,1rem);
+    }
+    .btn:hover{
+      background:#1d3053;
+      border-color:var(--brand-dark);
+      box-shadow:0 6px 14px rgba(0,0,0,.5);
+    }
+
+    /* SECCIÓN LINK CONFIGURADO */
+    .section{
+      margin-top:18px;
+      padding:16px;
+      background:#1d3053;
+      border:2px dashed var(--brand);
+      border-radius:12px;
+      color:white;
+    }
+
+    .mono{
+      font-family:monospace;
+      color:#6ebdff !important;
+      font-size:clamp(0.9rem,2.5vw,1rem);
+      word-break:break-all;
+    }
+
+    /* MODAL */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      backdrop-filter:blur(3px);
+      display:none;
+      place-items:center;
+      z-index:999;
+      padding:20px;
+    }
+    .modal.open{ display:grid; }
+
+    .box{
+      background:#1d3053;
+      border-radius:16px;
+      padding:20px;
+      width:min(420px,92vw);
+      text-align:center;
+      border:3px solid var(--brand);
+      color:white;
+      box-shadow:var(--shadow);
+    }
+
+    #qrHolder img,
+    #qrHolder canvas{
+      width:min(260px,80vw);
+      height:min(260px,80vw);
+      background:white;
+      border-radius:12px;
+      margin-top:12px;
+    }
+
+    .btn-ghost{
+      margin-top:16px;
+      padding:12px 16px;
+      border-radius:14px;
+      border:3px solid var(--brand);
+      background:#1d3053;
+      color:white !important;
+      font-weight:900;
+      cursor:pointer;
+      transition:.25s;
+      font-size:clamp(1rem,3vw,1.1rem);
+      width:100%;
+    }
+    .btn-ghost:hover{
+      border-color:var(--brand-dark);
+    }
+
+    /* FOOTER */
+    footer{
+      text-align:center;
+      margin-top:22px;
+      color:white;
+      font-size:14px;
+      text-shadow:0 2px 6px black;
+      padding:0 10px;
+    }
+
+    /* FIX iPhone */
+    html, body{
+      height:100%;
+      margin:0;
+      padding:0;
+    }
+
+    body{
+      position:relative;
+      min-height:100dvh;
+      overflow-x:hidden;
+      background-color:#000;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    /* ============================
+       ✔ TIPOGRAFÍA UNIFICADA (TODO BLANCO)
+    ============================ */
+
+    body, body *{
+      font-family:system-ui, Segoe UI, Roboto, Arial, sans-serif !important;
+      color:white !important;
+    }
+
+    h1, h2, h3{
+      font-weight:900 !important;
+      letter-spacing:.5px !important;
+      text-align:center !important;
+    }
+
+    p, span, div, label, small{
+      font-weight:600 !important;
+      line-height:1.35em !important;
+    }
+
+    strong{
+      font-weight:800 !important;
+    }
+
+    .mono{
+      color:#6ebdff !important;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
+
+  <div class="wrapper">
+    <div class="frame">
+
+      <div class="header"><h1>TARJETA VIRTUAL</h1></div>
+
+      <div class="grid">
+        <a class="btn" id="btnShowQR" href="#">🧾 Mostrar QR del enlace</a>
+        <a class="btn" id="btnDownloadQR" href="#">⬇️ Descargar PNG</a>
+        <a class="btn" id="btnCopy" href="#">🔗 Copiar link</a>
+        <a class="btn" id="btnShare" href="#">📤 Compartir</a>
+      </div>
+
+      <div class="section">
+        <strong>Link configurado:</strong><br>
+        <a class="mono" id="linkPreview" href="#" target="_blank"></a>
+      </div>
+
+      <div style="text-align:center; margin-top:18px;">
+        <a href="index.html" class="btn">← Volver al Panel Principal</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="qrModal">
+    <div class="box">
+      <h3>Código QR</h3>
+      <div id="qrHolder"></div>
+      <button class="btn-ghost" id="closeQR">Cerrar</button>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Benjamín González — Todos los derechos reservados.
+  </footer>
+
+  <!-- QR LIBRARY -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <script>
+
+    const MI_LINK = "https://tarjetavirtual.vercel.app/";
+
+    document.getElementById("linkPreview").textContent = MI_LINK;
+    document.getElementById("linkPreview").href = MI_LINK;
+
+    const modal = document.getElementById("qrModal");
+
+    function renderQR(){
+      const holder = document.getElementById("qrHolder");
+      holder.innerHTML = "";
+      new QRCode(holder, {
+        text: MI_LINK,
+        width: 260,
+        height: 260,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M
+      });
+    }
+
+    document.getElementById("btnShowQR").onclick = e =>{
+      e.preventDefault();
+      renderQR();
+      modal.classList.add("open");
+    };
+
+    document.getElementById("closeQR").onclick = ()=> modal.classList.remove("open");
+    modal.onclick = e=>{ if(e.target===modal) modal.classList.remove("open"); };
+
+    document.getElementById("btnCopy").onclick = async e =>{
+      e.preventDefault();
+      await navigator.clipboard.writeText(MI_LINK);
+      alert("Enlace copiado");
+    };
+
+    document.getElementById("btnShare").onclick = async e =>{
+      e.preventDefault();
+      if(navigator.share){
+        await navigator.share({ title:"Tarjeta Virtual", text:"Mi link", url:MI_LINK });
+      }else{
+        await navigator.clipboard.writeText(MI_LINK);
+        alert("Enlace copiado");
+      }
+    };
+
+    document.getElementById("btnDownloadQR").onclick = e =>{
+      e.preventDefault();
+      const canvas = document.querySelector("#qrHolder canvas");
+      if(!canvas){ renderQR(); }
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = "qr-tarjeta-virtual.png";
+      a.click();
+    };
+
+  </script>
+
+</body>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
