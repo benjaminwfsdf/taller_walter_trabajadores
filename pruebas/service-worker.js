@@ -1,5 +1,5 @@
 /* service-worker.js */
-const CACHE_NAME = "taller-walteruriol-v1";
+const CACHE_NAME = "taller-walteruriol-v5";
 
 /**
  * Ajusta esta lista si cambian nombres/rutas.
@@ -11,8 +11,8 @@ const ASSETS = [
   "/manifest.json",
 
   // ICONOS PWA
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
+  "/img/icon-192.png",
+  "/img/icon-512.png",
 
   // IMÁGENES
   "/img/portada_celular.png",
@@ -132,3 +132,4 @@ self.addEventListener("fetch", (event) => {
     })()
   );
 });
+
