@@ -1,5 +1,5 @@
 /* service-worker.js */
-const CACHE_NAME = "taller-walteruriol-v5";
+const CACHE_NAME = "taller-walteruriol-v8";
 
 /**
  * Ajusta esta lista si cambian nombres/rutas.
@@ -132,4 +132,5 @@ self.addEventListener("fetch", (event) => {
     })()
   );
 });
+
 
