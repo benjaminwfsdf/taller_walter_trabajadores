@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#1d3053" />
   <meta name="description" content="Panel Principal de Mecánica Walter Uriol" />
-  
+
   <!-- Manifest para PWA -->
   <link rel="manifest" href="manifest.json" />
-  
+
   <title>Panel Principal | Walter Uriol</title>
 
   <style>
@@ -27,9 +26,7 @@
       --shadow-soft:0 10px 26px rgba(0,0,0,.25);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body{
       margin:0;
@@ -65,7 +62,7 @@
 
     /* ⭐ CUADRO TRANSLÚCIDO CELESTE ⭐ */
     .frame{
-      background:rgba(135, 206, 250, 0.35);  /* CELESTE CLARO TRANSLÚCIDO */
+      background:rgba(135, 206, 250, 0.35);
       border-radius:var(--radius);
       padding:22px;
       box-shadow:var(--shadow);
@@ -86,11 +83,7 @@
       text-shadow:0 3px 8px rgba(0,0,0,.6);
       margin-bottom: 22px;
     }
-
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 5vw, 2.2rem);
-    }
+    .header h1 { margin: 0; font-size: clamp(1.5rem, 5vw, 2.2rem); }
 
     /* GRID */
     .grid{
@@ -100,11 +93,7 @@
       padding:12px;
     }
     @media(max-width:768px){
-      .grid{ 
-        grid-template-columns:1fr; 
-        gap: 16px;
-        padding: 8px;
-      }
+      .grid{ grid-template-columns:1fr; gap: 16px; padding: 8px; }
     }
 
     /* CARDS */
@@ -119,11 +108,9 @@
       box-shadow:var(--shadow);
       transition:.25s;
       width: 100%;
+      cursor: default;
     }
-
-    .card:hover{
-      transform:translateY(-3px);
-    }
+    .card:hover{ transform:translateY(-3px); }
 
     .icon{
       flex:0 0 48px;
@@ -170,6 +157,7 @@
       font-size:clamp(0.9rem, 3vw, 1rem);
       box-shadow:0 4px 10px rgba(0,0,0,.35);
       white-space: nowrap;
+      cursor:pointer;
     }
 
     .btn:hover{
@@ -191,67 +179,71 @@
 
     /* Mejoras para móviles */
     @media (max-width: 480px) {
-      .wrapper {
-        margin: 20px auto 40px;
-        padding: 0 12px;
-      }
-      
-      .frame {
-        padding: 16px;
-      }
-      
-      .card {
-        padding: 14px;
-        gap: 12px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .actions {
-        margin-left: 0;
-        margin-top: 12px;
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .btn {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .icon {
-        align-self: center;
-      }
+      .wrapper { margin: 20px auto 40px; padding: 0 12px; }
+      .frame { padding: 16px; }
+      .card { padding: 14px; gap: 12px; flex-direction: column; align-items: flex-start; }
+      .actions { margin-left: 0; margin-top: 12px; width: 100%; justify-content: center; }
+      .btn { width: 100%; text-align: center; }
+      .icon { align-self: center; }
     }
+
     /* === FIX GLOBAL PARA iPHONE Y CELULAR === */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+      position: relative;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      background-color: #000;
+    }
+    body::before{
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: inherit;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
 
-body {
-  position: relative;
-  min-height: 100dvh; /* 👈 corrige bug de Safari */
-  overflow-x: hidden;
-  background-color: #000; /* evita blancos */
-}
+    /* ===== AGRUPACIÓN (igual idea del ejemplo) ===== */
+    .section-content{ display:none; }
+    .section-content.active{ display:block; }
 
-/* El fondo real se genera aquí */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: inherit;    /* usa tu fondo ya definido */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  pointer-events: none;
-}
+    .group-indicator{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:12px;
+      opacity:.9;
+      margin-top:8px;
+      color: rgba(255,255,255,0.85);
+    }
+    .group-indicator::before{ content:"📁"; font-size:11px; }
+
+    /* Botón volver en submenú */
+    .btn-back{
+      display:inline-block;
+      margin: 0 0 16px 0;
+      background: transparent;
+      color: white;
+      padding:10px 16px;
+      font-weight:900;
+      border-radius:14px;
+      border:3px solid rgba(255,255,255,0.9);
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .btn-back:hover{
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Para que la tarjeta “grupo” sea clickeable */
+    .card.group { cursor:pointer; }
+    .btn-options{ min-width: 120px; text-align:center; }
 
   </style>
-  
 </head>
 
 <body>
@@ -259,8 +251,11 @@ body::before {
   <div class="topbar">WWW.MECANICAWALTERURIOL.CL</div>
 
   <div class="wrapper">
-    <div class="frame">
 
+    <!-- =========================
+         MENÚ PRINCIPAL
+    ========================== -->
+    <div id="main-menu" class="frame section-content active">
       <div class="header"><h1>Panel Principal</h1></div>
 
       <div class="grid">
@@ -298,9 +293,45 @@ body::before {
           </div>
         </article>
 
-        <!-- ========================
-             ORDEN DE LLEGADA
-        ======================== -->
+        <!-- =========================
+             ✅ GRUPO: ORDEN Y TURNOS
+        ========================== -->
+        <article class="card group" onclick="showSection('grupo-clientes')">
+          <div class="icon">👥</div>
+          <div>
+            <h2 class="title">Orden y Turnos</h2>
+            <p class="desc">Recepción de clientes y pantalla pública de turnos.</p>
+            <div class="group-indicator">Contiene: Recepción + Panel de turnos</div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-options" onclick="event.stopPropagation();showSection('grupo-clientes')">Ver opciones</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="icon">🗒️</div>
+          <div>
+            <h2 class="title">Gestión de Informes</h2>
+            <p class="desc">Crear y buscar informes de diagnóstico.</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="gestion_informes.html">Abrir</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- =========================
+         SUBMENÚ: GRUPO CLIENTES
+    ========================== -->
+    <div id="grupo-clientes" class="frame section-content">
+      <div class="header"><h1>👥 Orden y Turnos</h1></div>
+
+      <a class="btn-back" href="javascript:void(0)" onclick="showSection('main-menu')">← Volver al menú principal</a>
+
+      <div class="grid">
+
         <article class="card">
           <div class="icon">📋</div>
           <div>
@@ -312,9 +343,6 @@ body::before {
           </div>
         </article>
 
-        <!-- ========================
-             PANEL DE TURNOS
-        ======================== -->
         <article class="card">
           <div class="icon">📺</div>
           <div>
@@ -323,21 +351,6 @@ body::before {
           </div>
           <div class="actions">
             <a class="btn" href="panel_llegada.html">Abrir</a>
-          </div>
-        </article>
-
-        <!-- ========================
-             GESTIÓN DE INFORMES
-             (NUEVA SECCIÓN)
-        ======================== -->
-        <article class="card">
-          <div class="icon">🗒️</div>
-          <div>
-            <h2 class="title">Gestión de Informes</h2>
-            <p class="desc">Crear y buscar informes de diagnóstico.</p>
-          </div>
-          <div class="actions">
-            <a class="btn" href="gestion_informes.html">Abrir</a>
           </div>
         </article>
 
@@ -365,16 +378,39 @@ body::before {
     // Instalar la PWA
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevenir que el navegador muestre automáticamente el prompt
       e.preventDefault();
-      // Guardar el evento para usarlo después
       deferredPrompt = e;
-      // Opcional: mostrar un botón para instalar la app
       console.log('PWA puede ser instalada');
     });
+
+    // Cambiar entre secciones (grupos)
+    function showSection(sectionId){
+      document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(sectionId);
+      if(target){
+        target.classList.add('active');
+        window.scrollTo({top:0,behavior:'smooth'});
+
+        // (opcional) reflejar en URL para que puedas abrir directo
+        const url = new URL(location.href);
+        if(sectionId === 'main-menu') url.searchParams.delete('section');
+        else url.searchParams.set('section', sectionId);
+        history.replaceState({section: sectionId}, '', url.toString());
+      }
+    }
+
+    // Abrir directo si viene con ?section=grupo-clientes
+    (function initFromURL(){
+      const section = new URLSearchParams(location.search).get('section');
+      if(section && document.getElementById(section)){
+        showSection(section);
+      }
+    })();
   </script>
-  
+
   <!-- Script de Vercel (mantenido del código original) -->
   <script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_8nrmWRZ5t9JNXWYkUvi2tyBwVf9T" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
 </body>
-</html><script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+</html>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_5AxoMPpvdCKwGboCvgPcq1YskMoZ" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_DeVzJAhuGoAAqgxg6JSUPX2dGpGC" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
